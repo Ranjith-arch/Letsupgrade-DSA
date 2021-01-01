@@ -1,0 +1,441 @@
+//Question 1
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node {
+    int num;
+    struct node * nextptr;
+}*stnode;
+ 
+
+void ClListcreation(int n);
+void ClLinsertNodeAtBeginning(int num);
+void ClLinsertNodeAtAny(int num, int pos);
+void displayClList(int a);
+
+int main()
+{
+    int n,num1,a,insPlc;
+    stnode = NULL;
+	printf("\n\n Circular Linked List : Insert a node at any position in  a circular linked list :\n");
+	printf("--------------------------------------------------------------------------------------\n");	   	
+
+    printf(" Input the number of nodes : ");
+    scanf("%d", &n);
+    ClListcreation(n); 
+    a=1;
+    displayClList(a);
+	printf(" Input the position to insert a new node : ");
+    scanf("%d", &insPlc);
+    printf(" Input data for the position %d : ", insPlc);
+    scanf("%d", &num1);
+    ClLinsertNodeAtAny(num1,insPlc);  	
+    a=2;
+    displayClList(a);	
+    return 0;
+}
+
+void ClListcreation(int n)
+{
+    int i, num;
+    struct node *preptr, *newnode;
+
+    if(n >= 1)
+    {
+        stnode = (struct node *)malloc(sizeof(struct node));
+
+        printf(" Input data for node 1 : ");
+        scanf("%d", &num);
+        stnode->num = num;
+        stnode->nextptr = NULL;
+        preptr = stnode;
+        for(i=2; i<=n; i++)
+        {
+            newnode = (struct node *)malloc(sizeof(struct node));
+            printf(" Input data for node %d : ", i);
+            scanf("%d", &num);
+            newnode->num = num;
+            newnode->nextptr = NULL;	// next address of new node set as NULL
+            preptr->nextptr = newnode;	// previous node is linking with new node
+            preptr = newnode;   		// previous node is advanced
+        }
+        preptr->nextptr = stnode; 		//last node is linking with first node
+    }
+}
+
+void ClLinsertNodeAtBeginning(int num)
+{
+    struct node *newnode, *curNode;
+
+    if(stnode == NULL)
+    {
+        printf(" No data found in the List yet.");
+    }
+    else
+    {
+        newnode = (struct node *)malloc(sizeof(struct node));
+        newnode->num = num;
+        newnode->nextptr = stnode;
+        curNode = stnode;
+        while(curNode->nextptr != stnode)
+        {
+            curNode = curNode->nextptr;
+        }
+        curNode->nextptr = newnode;
+        stnode = newnode;
+    }
+}
+
+void ClLinsertNodeAtAny(int num, int pos)
+{
+    struct node *newnode, *curNode;
+    int i;
+
+    if(stnode == NULL)
+    {
+        printf(" No data found in the List yet.");
+    }
+    else if(pos == 1)
+    {
+        ClLinsertNodeAtBeginning(num);
+    }
+    else
+    {
+        newnode = (struct node *)malloc(sizeof(struct node));
+        newnode->num = num;
+        curNode = stnode;
+        for(i=2; i<=pos-1; i++)
+        {
+            curNode = curNode->nextptr;
+        }
+        newnode->nextptr = curNode->nextptr;
+        curNode->nextptr = newnode;
+    }
+} 
+
+void displayClList(int m)
+{
+    struct node *tmp;
+    int n = 1;
+
+    if(stnode == NULL)
+    {
+        printf(" No data found in the List yet.");
+    }
+    else
+    {
+        tmp = stnode;
+        if (m==1)
+        {
+        printf("\n Data entered in the list are :\n");
+        }
+        else
+        {
+         printf("\n After insertion the new list are :\n");   
+        }        
+        do {
+            printf(" Data %d = %d\n", n, tmp->num);
+
+            tmp = tmp->nextptr;
+            n++;
+        }while(tmp != stnode);
+    }
+}
+
+Output:
+
+ Circular Linked List : Insert a node at any position in  a circular linked list :                            
+--------------------------------------------------------------------------------------                        
+ Input the number of nodes : 3                                                                                
+ Input data for node 1 : 2                                                                                    
+ Input data for node 2 : 5                                                                                    
+ Input data for node 3 : 8                                                                                    
+                                                                                                              
+ Data entered in the list are :                                                                               
+ Data 1 = 2                                                                                                   
+ Data 2 = 5                                                                                                   
+ Data 3 = 8                                                                                                   
+ Input the position to insert a new node : 3                                                                  
+ Input data for the position 3 : 7                                                                            
+                                                                                                              
+ After insertion the new list are :                                                                           
+ Data 1 = 2                                                                                                   
+ Data 2 = 5                                                                                                   
+ Data 3 = 7                                                                                                   
+ Data 4 = 8
+
+//Question 2
+
+
+
+#include <stdio.h> 
+#include <stdlib.h> 
+
+  
+
+
+struct Node 
+{ 
+
+    int data; 
+
+    struct Node *next; 
+}; 
+
+  
+/* Given a reference (pointer to pointer) to the head of a list 
+
+   and an int, inserts a new node on the front of the list. */
+
+void push(struct Node** head_ref, int new_data) 
+{ 
+
+    struct Node* new_node = (struct Node*) malloc(sizeof(struct Node)); 
+
+    new_node->data  = new_data; 
+
+    new_node->next = (*head_ref); 
+
+    (*head_ref)    = new_node; 
+} 
+
+  
+/* Given a reference (pointer to pointer) to the head of a list 
+
+   and a key, deletes the first occurrence of key in linked list */
+
+void deleteNode(struct Node **head_ref, int key) 
+{ 
+
+    // Store head node 
+
+    struct Node* temp = *head_ref, *prev; 
+
+  
+
+    // If head node itself holds the key to be deleted 
+
+    if (temp != NULL && temp->data == key) 
+
+    { 
+
+        *head_ref = temp->next;   // Changed head 
+
+        free(temp);               // free old head 
+
+        return; 
+
+    } 
+
+  
+
+    // Search for the key to be deleted, keep track of the 
+
+    // previous node as we need to change 'prev->next' 
+
+    while (temp != NULL && temp->data != key) 
+
+    { 
+
+        prev = temp; 
+
+        temp = temp->next; 
+
+    } 
+
+  
+
+    // If key was not present in linked list 
+
+    if (temp == NULL) return; 
+
+  
+
+    // Unlink the node from linked list 
+
+    prev->next = temp->next; 
+
+  
+
+    free(temp);  // Free memory 
+} 
+
+  
+// This function prints contents of linked list starting from  
+// the given node 
+
+void printList(struct Node *node) 
+{ 
+
+    while (node != NULL) 
+
+    { 
+
+        printf(" %d ", node->data); 
+
+        node = node->next; 
+
+    } 
+} 
+
+  
+// Driver code 
+
+int main() 
+{ 
+
+    /* Start with the empty list */
+
+    struct Node* head = NULL; 
+
+  
+
+    push(&head, 7); 
+
+    push(&head, 1); 
+
+    push(&head, 3); 
+
+    push(&head, 2); 
+
+  puts("Created Linked List: "); 
+
+    printList(head); 
+
+    deleteNode(&head, 1); 
+
+    puts("\nLinked List after Deletion of 1: "); 
+
+    printList(head); 
+
+    return 0; 
+}
+
+Output:
+Created Linked List: 
+ 2  3  1  7 
+Linked List after Deletion of 1: 
+ 2  3  7 
+
+
+//Question 3
+
+#include <stdio.h>  
+   
+//Represent a node of the singly linked list  
+struct node{  
+    int data;  
+    struct node *next;  
+};      
+   
+//Represent the head and tail of the singly linked list  
+struct node *head, *tail = NULL;  
+   
+//addNode() will add a new node to the list  
+void addNode(int data) {  
+    //Create a new node  
+    struct node *newNode = (struct node*)malloc(sizeof(struct node));  
+    newNode->data = data;  
+    newNode->next = NULL;  
+      
+    //Checks if the list is empty  
+    if(head == NULL) {  
+        //If list is empty, both head and tail will point to new node  
+        head = newNode;  
+        tail = newNode;  
+    }  
+    else {  
+        //newNode will be added after tail such that tail's next will point to newNode  
+        tail->next = newNode;  
+        //newNode will become new tail of the list  
+        tail = newNode;  
+    }  
+}  
+   
+//deleteFromEnd() will delete a node from end of the list  
+void deleteFromEnd() {  
+      
+    //Checks if the list is empty  
+    if(head == NULL) {  
+        printf("List is empty \n");  
+        return;  
+    }  
+    else {  
+        //Checks whether the list contains only one element  
+        if(head != tail ) {  
+            struct node *current = head;  
+            //Loop through the list till the second last element such that current.next is pointing to tail  
+            while(current->next != tail) {  
+                current = current->next;  
+            }  
+            //Second last element will become new tail of the list  
+            tail = current;  
+            tail->next = NULL;  
+        }  
+        //If the list contains only one element   
+        //Then it will remove it and both head and tail will point to NULL  
+        else {  
+            head = tail = NULL;  
+        }  
+    }  
+}  
+      
+//display() will display all the nodes present in the list  
+void display() {  
+    //Node current will point to head  
+    struct node *current = head;  
+    if(head == NULL) {  
+        printf("List is empty\n");  
+        return;  
+    }  
+    while(current != NULL) {  
+        //Prints each node by incrementing pointer  
+        printf("%d ", current->data);  
+        current = current->next;  
+    }  
+    printf("\n");  
+}  
+      
+int main()  
+{  
+    //Adds data to the list  
+    addNode(1);  
+    addNode(2);  
+    addNode(3);  
+    addNode(4);  
+      
+    //Printing original list  
+    printf("Original List: \n");  
+    display();  
+      
+    while(head != NULL) {  
+        deleteFromEnd();  
+        //Printing updated list  
+        printf("Updated List: \n");  
+        display();  
+    }  
+          
+    return 0;  
+}  
+
+
+Output:
+
+Original List: 
+1 2 3 4 
+Updated List: 
+1 2 3 
+Updated List: 
+1 2 
+Updated List: 
+1 
+Updated List: 
+List is empty
+
+ 
+
+  
+    
+  
+ 
